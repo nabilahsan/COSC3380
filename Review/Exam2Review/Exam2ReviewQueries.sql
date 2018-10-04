@@ -3,10 +3,10 @@ SELECT F.facId, F.name
     FROM Faculty F
         ORDER BY F.name;
 
--- TODO: Question 2
+-- Question 2
 SELECT C.classNumber, S.lastName, S.firstName, S.major
-    FROM Student S, Enroll E, Class C, Faculty F
-        WHERE F.facId = 'F110' AND C.classNumber = E.classNumber AND E.stuId = S.stuId;
+    FROM Student S, Enroll E, Class C
+        WHERE C.facId = 'F110' AND C.classNumber = E.classNumber AND E.stuId = S.stuId;
 
 -- Question 3
 SELECT C.classNumber
