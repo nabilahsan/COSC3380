@@ -42,9 +42,23 @@ SELECT C.c_name AS Name, C.c_city AS City, C.c_state AS State
             ORDER BY C.c_state, C.c_name;
 
 -- Question 10
-
+SELECT C.c_state AS State, COUNT (*) AS CustormerCount
+    FROM Customer C
+        GROUP BY C.c_state;
 
 -- Question 11
+SELECT C.c_state AS State, C.c_city AS City, COUNT(*) AS CustormerCount
+    FROM Customer C
+        GROUP BY C.c_city, C.c_state
+        ORDER BY C.c_state;
+
+-- Question 12
+SELECT C.c_state AS StatesOneOrMore
+    FROM Customer C
+        GROUP BY C.c_state
+        HAVING COUNT(C.c_id) > 1;
+
+-- Question 13
 
 
 -- Question 14
