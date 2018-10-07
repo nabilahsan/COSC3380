@@ -59,6 +59,14 @@ SELECT C.c_state AS StatesOneOrMore
         HAVING COUNT(C.c_id) > 1;
 
 -- Question 13
-
+SELECT P.p_finish AS Finish, AVG(P.p_standard_price) AS AveragePrice
+    FROM Product P
+        WHERE P.p_standard_price < '750'
+        GROUP BY P.p_finish
+        ORDER BY P.p_finish;
 
 -- Question 14
+SELECT P.p_name AS Name, P.p_finish AS Finish, SUM(OL.quantity) AS ProductSum
+    FROM OrderLine OL, Product P
+        WHERE OL.p_id = P.p_id
+        GROUP BY OL.p_id, P.p_name, P.p_finish;
