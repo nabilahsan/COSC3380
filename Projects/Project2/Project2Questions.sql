@@ -1,8 +1,10 @@
 -- Question 1
+-- Listing all the products that cost less than $275
 SELECT P.p_id AS ProductsLessThan275 FROM Product P
-    WHERE P.p_standard_price >= 275;
+    WHERE P.p_standard_price <= 275;
 
 -- Question 2
+-- Listing the prices, names and product ID of all the products
 SELECT P.p_standard_price AS ProductUnitPrice, P.p_name AS ProductName, P.p_id AS ProductID
     FROM Product P;
 
