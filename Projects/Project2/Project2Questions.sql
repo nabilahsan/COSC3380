@@ -9,10 +9,12 @@ SELECT P.p_standard_price AS ProductUnitPrice, P.p_name AS ProductName, P.p_id A
     FROM Product P;
 
 -- Question 3
+-- Calculating the average price for all our products
 SELECT AVG(P.p_standard_price) AS AveragePrice
     FROM Product P;
 
 -- Question 4
+-- Returns the number of different items with order number 1004 
 SELECT COUNT(*) AS ItemsOrdered1004 FROM OrderLine OL
     WHERE OL.o_id = '1004';
 
