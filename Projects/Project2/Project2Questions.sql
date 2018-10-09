@@ -134,18 +134,48 @@ SELECT C.c_state AS State, COUNT (*) AS CustormerCount
         GROUP BY C.c_state;
 
 -- Question 11
+-- Count the number of customers with addresses in each city to which we ship. List the cities by state. 
+
+--  STATE   CITY                      CUSTOMERCOUNT
+--    CA	Sacramento                    	1
+--    CO	Boulder                       	1
+--    FL	Ft Walton Beach               	1
+--    FL	Gainesville                   	1
+--    Il	Oak Brook                     	1
+--    NJ	Carteret                      	1
+--    NM	Farmington                    	1
+--    NM	Las Cruces                    	1
+--    NY	Albany                        	1
+--    NY	Rome                          	2
+--    NY	Syracuse                      	1
+--    TX	Plano                         	1
+--    VA	Virginia Beach                	1
 SELECT C.c_state AS State, C.c_city AS City, COUNT(*) AS CustormerCount
     FROM Customer C
         GROUP BY C.c_city, C.c_state
         ORDER BY C.c_state;
 
 -- Question 12
+-- Find only states with more than one customer. 
+
+--  STATESONEORMORE
+--    NM
+--    NY
+--    FL
 SELECT C.c_state AS StatesOneOrMore
     FROM Customer C
         GROUP BY C.c_state
         HAVING COUNT(C.c_id) > 1;
 
 -- Question 13
+-- List, in alphabetical order, the product finish and the average standard price for
+-- each finish for selected finishes having an average standard price less than 750. 
+
+--    FINISH                          AVERAGEPRICE
+--    Cherry                        	250
+--    Natural Ash                   	287.5
+--    Natural Maple                 	650
+--    Walnut                        	250
 SELECT P.p_finish AS Finish, AVG(P.p_standard_price) AS AveragePrice
     FROM Product P
         WHERE P.p_standard_price < '750'
@@ -153,6 +183,17 @@ SELECT P.p_finish AS Finish, AVG(P.p_standard_price) AS AveragePrice
         ORDER BY P.p_finish;
 
 -- Question 14
+-- Total value of orders placed for each furniture product.
+
+--      NAME                            FINISH                      PRODUCTSUM
+--    End Table                     	Cherry                        	5
+--    Computer Desk                 	Natural Ash                   	11
+--    8-Drawer Desk                 	White Ash                     	2
+--    Dining Table                  	Natural Ash                   	5
+--    Computer Desk                 	Walnut                        	15
+--    Writers Desk                  	Cherry                        	2
+--    Entertainment Center          	Natural Maple                 	8
+--    Coffee Table                  	Natural Ash                   	4
 SELECT P.p_name AS Name, P.p_finish AS Finish, SUM(OL.quantity) AS ProductSum
     FROM OrderLine OL, Product P
         WHERE OL.p_id = P.p_id
