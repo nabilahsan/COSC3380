@@ -6,15 +6,15 @@
 -- George Navarro - E7
 
 -- Entering data into database
-DROP TABLE Customer CASCADE CONSTRAINTS;
-DROP TABLE Territory CASCADE CONSTRAINTS;
-DROP TABLE SalesPerson CASCADE CONSTRAINTS;
-DROP TABLE DoesBusinessIn CASCADE CONSTRAINTS;
-DROP TABLE ProductLine CASCADE CONSTRAINTS;
-DROP TABLE Product CASCADE CONSTRAINTS;
-DROP TABLE Orderr CASCADE CONSTRAINTS;
-DROP TABLE OrderLine CASCADE CONSTRAINTS;
-DROP TABLE PriceUpdate CASCADE CONSTRAINTS;
+DROP TABLE Customer;
+DROP TABLE Territory;
+DROP TABLE SalesPerson;
+DROP TABLE DoesBusinessIn;
+DROP TABLE ProductLine;
+DROP TABLE Product;
+DROP TABLE Orderr;
+DROP TABLE OrderLine;
+DROP TABLE PriceUpdate  ;
 
 -- Customers
 CREATE TABLE Customer (
@@ -28,6 +28,7 @@ CREATE TABLE Customer (
     c_username CHAR(30),
     c_password CHAR(30),
     PRIMARY KEY ( c_id ) );
+    
 INSERT INTO Customer VALUES ( 1, 'Contemporary Casuals', '1355 S Hines Blvd', 'Gainesville', 'FL', '32601-2871', NULL, NULL, NULL );
 INSERT INTO Customer VALUES ( 2, 'Value Furnitures', '15145 S.W. 17th St.', 'Plano', 'TX', '75094-7734', NULL, NULL, NULL );
 INSERT INTO Customer VALUES ( 3, 'Home Furnishings', '1900 Allard Ave', 'Albany', 'NY', '12209-1125', 'homefurnishings?@gmail.com', 'CUSTOMER1', 'CUSTOMER1#' );
@@ -48,6 +49,7 @@ CREATE TABLE Territory (
     t_id CHAR(30),
     t_name CHAR(30),
     PRIMARY KEY ( t_id ) );
+    
 INSERT INTO Territory VALUES ( 1, 'SouthEast' );
 INSERT INTO Territory VALUES ( 2, 'SouthWest' );
 INSERT INTO Territory VALUES ( 3, 'NorthEast' );
@@ -62,9 +64,10 @@ CREATE TABLE SalesPerson (
     sp_email CHAR(30),
     sp_username CHAR(30),
     sp_password CHAR(30),
-    t_id CHAR(30) NOT NULL,
-    PRIMARY KEY ( sp_id ),
-    FOREIGN KEY ( t_id ) REFERENCES Territory );
+    t_id CHAR(30),
+    PRIMARY KEY ( t_id, sp_id ),
+    FOREIGN KEY ( t_id ) REFERENCES Territory (t_id));
+
 INSERT INTO SalesPerson VALUES ( 1, 'Doug Henny', '8134445555', 'salesperson?@gmail.com', 'SALESPERSON', 'SALESPERSON#', 1 );
 INSERT INTO SalesPerson VALUES ( 2, 'Robert Lewis', '8139264006', '', '', '', 2 );
 INSERT INTO SalesPerson VALUES ( 3, 'William Strong', '5053821212', '', '', '', 3 );
@@ -76,8 +79,9 @@ CREATE TABLE DoesBusinessIn (
     c_id CHAR(30) NOT NULL,
     t_id CHAR(30) NOT NULL,
     PRIMARY KEY ( c_id, t_id ),
-    FOREIGN KEY ( c_id ) REFERENCES Customer,
-    FOREIGN KEY ( t_id ) REFERENCES Territory );
+    FOREIGN KEY ( c_id ) REFERENCES Customer(c_id),
+    FOREIGN KEY ( t_id ) REFERENCES Territory(t_id) );
+
 INSERT INTO DoesBusinessIn VALUES ( 1, 1 );
 INSERT INTO DoesBusinessIn VALUES ( 2, 2 );
 INSERT INTO DoesBusinessIn VALUES ( 3, 3 );
@@ -91,6 +95,7 @@ CREATE TABLE ProductLine (
     pl_id CHAR(30) NOT NULL,
     pl_name CHAR(30),
     PRIMARY KEY ( pl_id ) );
+
 INSERT INTO ProductLine VALUES ( 1, 'Cherry Tree' );
 INSERT INTO ProductLine VALUES ( 2, 'Scandinavia' );
 INSERT INTO ProductLine VALUES ( 3, 'Country Look' );
@@ -104,7 +109,8 @@ CREATE TABLE Product (
     pl_id CHAR(30),
     p_photo CHAR(30),
     PRIMARY KEY ( p_id ),
-    FOREIGN KEY ( pl_id ) REFERENCES ProductLine );
+    FOREIGN KEY ( pl_id ) REFERENCES ProductLine(pl_id) );
+
 INSERT INTO Product VALUES ( 1, 'End Table', 'Cherry', 175, 1, 'table.jpg' );
 INSERT INTO Product VALUES ( 2, 'Coffee Table', 'Natural Ash', 200, 2, NULL );
 INSERT INTO Product VALUES ( 3, 'Computer Desk', 'Natural Ash', 375, 2, NULL );
@@ -117,20 +123,21 @@ INSERT INTO Product VALUES ( 8, 'Computer Desk', 'Walnut', 250, 3, NULL );
 -- Orderr
 CREATE TABLE Orderr (
     o_id CHAR(30) NOT NULL,
-    o_date DATETIME,
+    o_date DATE,
     c_id CHAR(30) NOT NULL, /* c_id is not a key, but has to reference a customer per Orderr */
     PRIMARY KEY ( o_id ),
-    FOREIGN KEY ( c_id ) REFERENCES Customer );
-INSERT INTO Orderr VALUES ( 1001, '21/Aug/16', 1 );
-INSERT INTO Orderr VALUES ( 1002, '21/Jul/16', 8 );
-INSERT INTO Orderr VALUES ( 1003, '22/Aug/16', 15 );
-INSERT INTO Orderr VALUES ( 1004, '22/Oct/16', 5 );
-INSERT INTO Orderr VALUES ( 1005, '24/Jul/16', 3 );
-INSERT INTO Orderr VALUES ( 1006, '24/Oct/16', 2 );
-INSERT INTO Orderr VALUES ( 1007, '27/Aug/16', 5 );
-INSERT INTO Orderr VALUES ( 1008, '30/Oct/16', 12 );
-INSERT INTO Orderr VALUES ( 1009, '05/Nov/16', 4 );
-INSERT INTO Orderr VALUES ( 1010, '05/Nov/16', 1 );
+    FOREIGN KEY ( c_id ) REFERENCES Customer(c_id) );
+
+INSERT INTO Orderr VALUES ( 1001, '2016-8-21', 1 );
+INSERT INTO Orderr VALUES ( 1002, '2016-7-21', 8 );
+INSERT INTO Orderr VALUES ( 1003, '2016-8-22' , 15 );
+INSERT INTO Orderr VALUES ( 1004, '2016-10-22', 5 );
+INSERT INTO Orderr VALUES ( 1005, '2016-7-24', 3 );
+INSERT INTO Orderr VALUES ( 1006, '2016-10-24', 2 );
+INSERT INTO Orderr VALUES ( 1007, '2016-8-27', 5 );
+INSERT INTO Orderr VALUES ( 1008, '2016-10-30', 12 );
+INSERT INTO Orderr VALUES ( 1009, '2016-11-05', 4 );
+INSERT INTO Orderr VALUES ( 1010, '2016-11-05', 1 );
 
 -- OrderLine
 CREATE TABLE OrderLine (
@@ -139,8 +146,9 @@ CREATE TABLE OrderLine (
     quantity INTEGER,
     sale_price FLOAT,
     PRIMARY KEY ( o_id, p_id ),
-    FOREIGN KEY ( o_id ) REFERENCES Orderr,
-    FOREIGN KEY ( p_id ) REFERENCES Product );
+    FOREIGN KEY ( o_id ) REFERENCES Orderr(o_id),
+    FOREIGN KEY ( p_id ) REFERENCES Product(p_id) );
+
 INSERT INTO OrderLine VALUES ( 1001, 1, 2, NULL );
 INSERT INTO OrderLine VALUES ( 1001, 2, 2, NULL );
 INSERT INTO OrderLine VALUES ( 1001, 4, 1, NULL );
@@ -271,6 +279,7 @@ SELECT P.p_name AS Name, P.p_finish AS Finish, P.p_standard_price AS Price
 -- NAME                             PRICE
 -- Coffee Table                  	200                           
 -- Computer Desk                 	250                           
+
 SELECT P.p_name AS Name, P.p_standard_price AS Price
     FROM Product P
         WHERE P.p_standard_price BETWEEN '200' AND '300';
@@ -285,6 +294,7 @@ SELECT P.p_name AS Name, P.p_standard_price AS Price
 -- Contemporary Casuals          	Gainesville                   	FL
 -- Flanigan Furniture            	Ft Walton Beach               	FL
 -- Value Furnitures              	Plano                         	TX
+
 SELECT C.c_name AS Name, C.c_city AS City, C.c_state AS State
     FROM Customer C
         WHERE C.c_state IN ('FL', 'TX', 'CA')
@@ -303,7 +313,8 @@ SELECT C.c_name AS Name, C.c_city AS City, C.c_state AS State
 --      CO	        1
 --      FL	        2
 --      TX	        1
-SELECT C.c_state AS State, COUNT (*) AS CustormerCount
+
+SELECT C.c_state AS State, count(*) AS CustormerCount
     FROM Customer C
         GROUP BY C.c_state;
 
@@ -324,6 +335,7 @@ SELECT C.c_state AS State, COUNT (*) AS CustormerCount
 --    NY	Syracuse                      	1
 --    TX	Plano                         	1
 --    VA	Virginia Beach                	1
+
 SELECT C.c_state AS State, C.c_city AS City, COUNT(*) AS CustormerCount
     FROM Customer C
         GROUP BY C.c_city, C.c_state
@@ -350,6 +362,7 @@ SELECT C.c_state AS StatesOneOrMore
 --    Natural Ash                   	287.5
 --    Natural Maple                 	650
 --    Walnut                        	250
+
 SELECT P.p_finish AS Finish, AVG(P.p_standard_price) AS AveragePrice
     FROM Product P
         WHERE P.p_standard_price < '750'
@@ -368,6 +381,7 @@ SELECT P.p_finish AS Finish, AVG(P.p_standard_price) AS AveragePrice
 --    Writers Desk                  	Cherry                        	2
 --    Entertainment Center          	Natural Maple                 	8
 --    Coffee Table                  	Natural Ash                   	4
+
 SELECT P.p_name AS Name, P.p_finish AS Finish, SUM(OL.quantity) AS ProductSum
     FROM OrderLine OL, Product P
         WHERE OL.p_id = P.p_id
